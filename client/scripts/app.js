@@ -6,12 +6,21 @@ class ChatApp {
   }
 
   init() {
+    this.fetch();
+
     $('#send').on('click', this.handleSubmit.bind(this));
     $('#roomList').on('change', this.handleRoomChange.bind(this));
 
     this.userName = this._parseURLforUsername();
     this.currentRoom = 'lobby';
 
+    $('#newRoom').on('click', this.handleRoomAdd.bind(this));
+  }
+
+  handleRoomAdd() {
+    let newRoomName = prompt('Enter your room name here: ');
+    this.rooms[newRoomName] = newRoomName;
+    this.reRenderData(this.lastFetchData);
   }
 
   handleRoomChange() {
@@ -20,6 +29,10 @@ class ChatApp {
     let queryParameters = {where: {'roomname': targetRoom}, order: '-createdAt'};
     //Fetch with some query param
     this.fetch(queryParameters);
+  }
+
+  getSelectedRoom() {
+    return $('#roomList option:selected').text();
   }
 
   _parseURLforUsername() {
@@ -65,6 +78,7 @@ class ChatApp {
       console.log('chatterbox: Data fetched');
       console.log(data);
       this.lastFetchData = data;
+      $('.userMessage').remove();
       data.results.forEach(message => this.renderMessage(message));
     }
   }
@@ -89,8 +103,6 @@ class ChatApp {
     // If user's is friend, add the bold class
     if (this.users[userName] === true) {
       $newMessage.addClass('bold');
-    } else {
-      $newMessage.removeClass('bold');
     }
     $('#chats').prepend($newMessage);
 
@@ -148,7 +160,7 @@ class ChatApp {
     let message = {}; 
     message.text = $('#userMessage').val();
     message.username = this.userName;
-    message.roomname = this.currentRoom;
+    message.roomname = this.getSelectedRoom();
 
     this.send(message);
   }
