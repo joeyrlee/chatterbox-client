@@ -117,7 +117,7 @@ class ChatApp {
       if (this.users[userName] === true) {
         $newUserName.css('color','red');
       }
-      $('#main').prepend($newUserName);
+      $('#userList').prepend($newUserName);
     }
 
 

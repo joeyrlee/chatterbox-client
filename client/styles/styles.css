@@ -1,10 +1,11 @@
 body {
     background: #eee;
-    text-align: center;
+    /**text-align: center;**/
     padding: 0 25px;
     font-family: arial, sans-serif;
 }
 
+/**
 #main, #chats {
     width: 500px;
     margin: auto;
@@ -88,6 +89,7 @@ form input[type=text] {
     background-color: #0090da;
 }
 
+**/
 .bold {
     font-weight: bold;
 }

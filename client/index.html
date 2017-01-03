@@ -4,10 +4,12 @@
     <meta charset="utf-8">
     <title>chatterbox</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
 
     <!-- dependencies -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script>
       // YOU DO NOT NEED TO EDIT THIS CODE
       if (!/(&|\?)username=/.test(window.location.search)) {
@@ -24,23 +26,54 @@
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
   </head>
+
   <body>
-    <div id="main">
-      <h1>chatterbox</h1>
-      <!-- Your HTML goes here! -->
-      <select id="roomList">
-        <option value="lobby">Lobby</option>
-      </select>
-      <button type="button" id="newRoom">Create New Room</button>
-      <div id="userList">
+    <div id="main" class="container-fluid">
+      <div class="row">
+        <div class="jumbotron col-lg-12"><h1>chatterbox</h1></div>
+        <!-- Your HTML goes here! -->
+      <div>
+
+      <div class="row roomComponent">
+        <div class="col-sm-4">
+            <select class="form-control" id="roomList">
+              <option value="lobby">Lobby</option>
+            </select>
+        </div>
+        <div class="col-sm-1">
+            <button type="button" class="btn btn-primary btn-sm" id="newRoom">Create New Room</button>
+        </div>
       </div>
 
+   <div class="row" style="height: 20px">
+
+   </div>
+
+    <div class="row" id="chatAndUser">
+      <div class="col-sm-8">
+        <div>Messages:</div>
+        <div class="panel panel-default pre-scrollable" id="chats"></div>
+      </div>
+      <div class="col-sm-4">
+        <div>Users:</div>
+        <div class="panel panel-default pre-scrollable" id="userList"></div>
     </div>
-    <div id="chats"></div>
-    <div id="roomSelect"></div>
-    <form>
-      <input type="text" id="userMessage">
-      <button type="button" class="btn btn-primary" id="send">Send</button>
-    </form>
+   
+
+
+    <div class="row">
+      <form class="col-sm-11">
+        <div class="col-sm-1">
+        Messages:
+        </div>
+        <div class="col-sm-11">
+          <input type="text" id="userMessage" style="width: 100%;">
+        </div>
+      </form>
+
+      <form class="col-sm-1">
+        <button type="button" class="btn btn-primary btn-sm" id="send">Send</button>
+      </form>
+    </div>
   </body>
 </html>
