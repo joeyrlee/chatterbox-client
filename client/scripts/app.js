@@ -15,11 +15,11 @@ class ChatApp {
   }
 
   handleRoomChange() {
-    console.log($('#roomList option:selected').text());
+    let targetRoom = $('#roomList option:selected').text();
     //Construct query param
-    //let queryParameters = {roomname: 'lobby', order: '-createdAt'};
+    let queryParameters = {where: {'roomname': targetRoom}, order: '-createdAt'};
     //Fetch with some query param
-    //this.fetch(queryParameters);
+    this.fetch(queryParameters);
   }
 
   _parseURLforUsername() {
@@ -64,8 +64,13 @@ class ChatApp {
     function onFetchSuccess(data) {
       console.log('chatterbox: Data fetched');
       console.log(data);
+      this.lastFetchData = data;
       data.results.forEach(message => this.renderMessage(message));
     }
+  }
+
+  reRenderData(data) {
+    data.results.forEach(message => this.renderMessage(message));    
   }
 
   clearMessages() {
@@ -76,26 +81,40 @@ class ChatApp {
     let userName = message.username;
     let text = message.text;
     let roomname = message.roomname;
+    let messageID = message.objectId;
 
 
     let $newMessage = $('<div class="userMessage"></div>');
     $newMessage.text(text);
+    // If user's is friend, add the bold class
+    if (this.users[userName] === true) {
+      $newMessage.addClass('bold');
+    } else {
+      $newMessage.removeClass('bold');
+    }
     $('#chats').prepend($newMessage);
 
-    this.users[userName] = userName;
+    if (this.users[userName] === undefined) {
+      this.users[userName] = false;
+    }
+
     $('.username').remove();
     for (let userName in this.users) {
       let $newUserName = $('<div class="username"></div>');
       $newUserName.text(userName);
+      if (this.users[userName] === true) {
+        $newUserName.css('color','red');
+      }
       $('#main').prepend($newUserName);
     }
 
-    $('.username').on('click', this.handleUsernameClick.bind(this));
+
+    $('.username').on('click', {originApp: this}, this.handleUsernameClick);
 
     this.rooms[roomname] = roomname;
     $('.roomEntry').remove();
     for (let roomname in this.rooms) {
-      let $newRoom = $('<option class="roomEntry" value=""></option>');
+      let $newRoom = $('<option class="roomEntry"></option>');
       $newRoom.text(roomname);
       $('#roomList').append($newRoom);
     }
@@ -106,8 +125,23 @@ class ChatApp {
     $('#roomSelect').prepend(newRoom);
   }
 
-  handleUsernameClick() {
+  handleUsernameClick(event) {
+    let targetFriendName = $(this).text();
+    let currentApp = event.data.originApp;
 
+    console.log($(this).css('color'));
+    if ($(this).css('color') === 'rgb(255, 0, 0)') {
+      // Unfriend
+      $(this).css('color', 'black');
+      currentApp.users[targetFriendName] = false;
+
+    } else {
+      // Friend
+      $(this).css('color', 'red');
+      currentApp.users[targetFriendName] = true;
+    }
+
+    currentApp.reRenderData(currentApp.lastFetchData);
   }
 
   handleSubmit() {
